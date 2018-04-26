@@ -1,0 +1,15 @@
+imax,jmax   U[imax/2][7*jmax/8]
+16          0.224462   converged
+32          0.268232   converged
+64          0.276508   converged
+128         0.292832   not converged yet, but almost converged
+256         osc
+512
+1024
+
+
+Re       n,      T,          U[imax/2][7*jmax/8]
+100      10000   50          0
+500      2001    50.025      0.000002
+2000     500     50          0.000193
+10000    4365    50.006393  -0.016957    osc and calculate much slower
