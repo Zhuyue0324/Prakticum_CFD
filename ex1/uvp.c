@@ -45,10 +45,10 @@ void calculate_fg(
             F[i][j]=U[i][j]+dt*(
                 ((U[i+1][j]-2.0*U[i][j]+U[i-1][j])/(dx*dx)+(U[i][j+1]-2.0*U[i][j]+U[i][j-1])/(dy*dy))/Re
                 -(((U[i][j]+U[i+1][j])/2.0)*((U[i][j]+U[i+1][j])/2.0)-((U[i-1][j]+U[i][j])/2.0)*((U[i-1][j]+U[i][j])/2.0)
-                    +alpha*((abs(U[i][j]+U[i+1][j])/2.0)*((U[i][j]-U[i+1][j])/2.0)-(abs(U[i-1][j]+U[i][j])/2.0)*((U[i-1][j]-U[i][j])/2.0))
+                    +alpha*((fabs(U[i][j]+U[i+1][j])/2.0)*((U[i][j]-U[i+1][j])/2.0)-(fabs(U[i-1][j]+U[i][j])/2.0)*((U[i-1][j]-U[i][j])/2.0))
                 )/dx
                 -(((V[i][j]+V[i+1][j])/2.0)*((U[i][j]+U[i][j+1])/2.0)-((V[i][j-1]+V[i+1][j-1])/2.0)*((U[i][j-1]+U[i][j])/2.0)
-                    +alpha*((abs(V[i][j]+V[i+1][j])/2.0)*((U[i][j]-U[i][j+1])/2.0)-(abs(V[i][j-1]+V[i+1][j-1])/2.0)*((U[i][j-1]-U[i][j])/2.0))
+                    +alpha*((fabs(V[i][j]+V[i+1][j])/2.0)*((U[i][j]-U[i][j+1])/2.0)-(fabs(V[i][j-1]+V[i+1][j-1])/2.0)*((U[i][j-1]-U[i][j])/2.0))
                 )/dy
                 +GX
             );
@@ -59,10 +59,10 @@ void calculate_fg(
             G[i][j]=V[i][j]+dt*(
                 ((V[i+1][j]-2.0*V[i][j]+V[i-1][j])/(dx*dx)+(V[i][j+1]-2.0*V[i][j]+V[i][j-1])/(dy*dy))/Re
                 -(((U[i][j]+U[i][j+1])/2.0)*((V[i][j]+V[i+1][j])/2.0)-((U[i-1][j]+U[i-1][j+1])/2.0)*((V[i-1][j]+V[i][j])/2.0)
-                    +alpha*((abs(U[i][j]+U[i][j+1])/2.0)*((V[i][j]-V[i+1][j])/2.0)-(abs(U[i-1][j]+U[i-1][j+1])/2.0)*((V[i-1][j]-V[i][j])/2.0))
+                    +alpha*((fabs(U[i][j]+U[i][j+1])/2.0)*((V[i][j]-V[i+1][j])/2.0)-(fabs(U[i-1][j]+U[i-1][j+1])/2.0)*((V[i-1][j]-V[i][j])/2.0))
                 )/dx
                 -(((V[i][j]+V[i][j+1])/2.0)*((V[i][j]+V[i][j+1])/2.0)-((V[i][j-1]+V[i][j])/2.0)*((V[i][j-1]+V[i][j])/2.0)
-                    +alpha*((abs(V[i][j]+V[i][j+1])/2.0)*((V[i][j]-V[i][j+1])/2.0)-(abs(V[i][j-1]+V[i][j])/2.0)*((V[i][j-1]-V[i][j])/2.0))
+                    +alpha*((fabs(V[i][j]+V[i][j+1])/2.0)*((V[i][j]-V[i][j+1])/2.0)-(fabs(V[i][j-1]+V[i][j])/2.0)*((V[i][j-1]-V[i][j])/2.0))
                 )/dy
                 +GY
             );
@@ -128,15 +128,15 @@ void calculate_dt(
     double vmax=0;
     for(int i = 1; i <= imax; i++) {
         for(int j = 1; j<=jmax; j++) {
-            if (abs(U[i][j])>umax){
-                umax=abs(U[i][j]);
+            if (fabs(U[i][j])>umax){
+                umax=fabs(U[i][j]);
             }
-            if (abs(V[i][j])>vmax){
-                vmax=abs(V[i][j]);
+            if (fabs(V[i][j])>vmax){
+                vmax=fabs(V[i][j]);
             }
         }
     }
-    *dt=tau*(fmin(Re/(2*(1/(dx*dx)+1/(dy*dy))),fmin(dx/umax,dy/vmax)));
+    *dt=tau*(fmin(Re/(2.0*(1.0/(dx*dx)+1.0/(dy*dy))),fmin(dx/umax,dy/vmax)));
 }
 
 

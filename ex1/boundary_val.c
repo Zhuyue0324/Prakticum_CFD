@@ -2,6 +2,7 @@
 #include "helper.h"
 #include <math.h>
 
+//set the boundary conditions
 void boundaryvalues(
   int imax,
   int jmax,
