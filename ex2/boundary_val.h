@@ -11,7 +11,7 @@ void boundaryvalues(
   double **U,
   double **V,
   int **Flag,
-  int TypeQuestion,
+  int NameQuestion,
   double Th,
   double Tc,
   double **Temp,
