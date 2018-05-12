@@ -101,66 +101,91 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
   //To generate filename. problem=args[1].dat, geometry=args[1].pgm, outputfilename=output/args[1]
   //P.S. I find it really painful to generate file names with the input words using c because of the pointers...
 
-  char Filename1[(int)(sizeof(args[1])/sizeof(args[1][0]))];
+  /*char Filename1[(int)(sizeof(args[1])/sizeof(args[1][0]))];
   char Filename2[(int)(sizeof(args[1])/sizeof(args[1][0]))];
   char Filename3[(int)(sizeof(args[1])/sizeof(args[1][0]))];
   char *foldername="output/";
-  char *aftername1=".dat";
-  char *aftername2=".pgm";
+  //char *aftername1=".dat";
+  //char *aftername2=".pgm";
   char Outputfilename[(int)(sizeof(args[1])/sizeof(args[1][0]))+7];
-  char problem[(int)(sizeof(args[1])/sizeof(args[1][0]))+4];
-  char geometry[(int)(sizeof(args[1])/sizeof(args[1][0]))+4];
+  //char problem[(int)(sizeof(args[1])/sizeof(args[1][0]))+4];
+  //char geometry[(int)(sizeof(args[1])/sizeof(args[1][0]))+4];
   strcpy(Filename1,args[1]);
   strcpy(Filename2,args[1]);
   strcpy(Filename3,args[1]);
-  //char* problem=strcat(Filename1,".dat");
-  //char* geometry=strcat(Filename2,".pgm");
+  char* problem=strcat(Filename1,".dat");
+  char* geometry=strcat(Filename2,".pgm");
   for (int i=0;i<7;i++){
     Outputfilename[i]=foldername[i];
   }
   for (int i=0;i<(int)(sizeof(args[1])/sizeof(args[1][0]));i++){
     Outputfilename[i+7]=Filename3[i];
-    problem[i]=Filename1[i];
-    geometry[i]=Filename2[i];
+    //problem[i]=Filename1[i];
+    //geometry[i]=Filename2[i];
   }
-  for (int i=0;i<4;i++){
-    problem[(int)(sizeof(args[1])/sizeof(args[1][0]))+i]=aftername1[i];
-    geometry[(int)(sizeof(args[1])/sizeof(args[1][0]))+i]=aftername2[i];
-  }
+  //for (int i=0;i<4;i++){
+    //problem[(int)(sizeof(args[1])/sizeof(args[1][0]))+i]=aftername1[i];
+    //geometry[(int)(sizeof(args[1])/sizeof(args[1][0]))+i]=aftername2[i];
+  //}
+  printf("%s\n",problem);
+  printf("%s\n",geometry);
+  printf("%s\n",Outputfilename);*/
 
   //Set flags for the question: is this a fluid or heat problem? is it karman or step or natural convection or heat trap or rbc?
+
+  char* problem;
+  char* geometry;
+  char* Outputfilename;
 
   double Th=1.0;
   double Tc=0.0;
   int TypeQuestion=0;//1=fluid, 2=heat
   int NameQuestion=0;//1=karman, 2=step, 3=natural convection, 4=trap, 5=rbc
   if (strcmp(args[1],"karman")==0){
+    problem="karman.dat";
+    geometry="karman.pgm";
+    Outputfilename="output/karman";
     NameQuestion=1;
     TypeQuestion=1;//fluid
   }
   else if (strcmp(args[1],"step")==0){
+    problem="step.dat";
+    geometry="step.pgm";
+    Outputfilename="output/step";
     NameQuestion=2;
     TypeQuestion=1;
   }
   else if (strcmp(args[1],"natural1")==0){
+    problem="natural1.dat";
+    geometry="natural1.pgm";
+    Outputfilename="output/natural1";
     NameQuestion=3;
     TypeQuestion=2;//heat
     Th=1.0;
     Tc=0.0;
   }
   else if (strcmp(args[1],"natural2")==0){
+    problem="natural2.dat";
+    geometry="natural2.pgm";
+    Outputfilename="output/natural2";
     NameQuestion=3;
     TypeQuestion=2;//heat
     Th=1.0;
     Tc=0.0;
   }
   else if (strcmp(args[1],"trap")==0){
+    problem="trap.dat";
+    geometry="trap.pgm";
+    Outputfilename="output/trap";
     NameQuestion=4;
     TypeQuestion=2;
     Th=0.5;
     Tc=-0.5;
   }
   else if (strcmp(args[1],"rbc")==0){
+    problem="rbc.dat";
+    geometry="rbc.pgm";
+    Outputfilename="output/rbc";
     NameQuestion=5;
     TypeQuestion=2;
     Th=294.78;
@@ -249,7 +274,7 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
     //compute boundary for U,V,T
 
     boundaryvalues(*imax, *jmax, U, V, Flag, NameQuestion, Th, Tc, Temp, *INUI, *INVI);
-
+    
     //compute T^(n+1) if this is a heat question
 
     if (TypeQuestion==2){
@@ -291,7 +316,8 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
 
     //write a vtk file after a dt_value
 
-    if (restTime>=*dt_value){
+    /*if (restTime>=*dt_value){
+      boundaryvalues(*imax, *jmax, U, V, Flag, NameQuestion, Th, Tc, Temp, *INUI, *INVI);
       if (TypeQuestion==1){
         write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Geo);
       }
@@ -299,7 +325,7 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
         write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Temp);
       }
       restTime=restTime-*dt_value;
-    }
+    }*/
 
     //print out n, dt, t, #sor, Residual in the terminal
 
@@ -316,7 +342,8 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
   }
 
   //write out the final file
-  
+
+  boundaryvalues(*imax, *jmax, U, V, Flag, NameQuestion, Th, Tc, Temp, *INUI, *INVI);
   if (TypeQuestion==1){
     write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Geo);
   }

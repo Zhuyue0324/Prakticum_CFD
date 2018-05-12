@@ -66,6 +66,10 @@ void boundaryvalues(
                     V[i][j-1]=-V[i+1][j-1];
                 }
             }
+            else if ((Flag[i][j]<=255)&&((Flag[i][j]%16)==0)){//Inner obstacle surrounded by 4 obstacles
+                U[i][j]=0;
+                V[i][j]=0;
+            }
         }
     }
     //External Boundary Condition
