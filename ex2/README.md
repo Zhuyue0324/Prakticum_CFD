@@ -16,10 +16,12 @@ To run it, you start a terminal and switch to where the main.c is. You need to b
 
 General cases:
 
-"./sim (problem) (geometry) (Output_filename) fluid" for a general fluid case without heat
+"./sim (problem) (geometry) (Output_filename) fluid" for a general fluid case without heat.
+
 Example: "./sim karman.dat karman.pgm output/karman fluid"
 
 "./sim (problem) (geometry) (Output_filename) heat downup/leftright (Th) (Tc)" for a general fluid case with heat. downup/leftright are where the wall are Th and Tc.
+
 Example: "./sim natural1.dat natural1.pgm output/natural1 heat leftright 1.0 0.0"
 
 ## Problem 1.4 a) The Karman Vortex Street:
