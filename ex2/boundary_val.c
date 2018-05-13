@@ -163,7 +163,7 @@ void boundaryvalues(
         
     }
     //Boundary condition of Temperature
-    if (NameQuestion==3){
+    if (NameQuestion==3){//natural convection
         for (int i=1;i<=imax;i++){
             Temp[i][0]=Temp[i][1];
             Temp[i][jmax+1]=Temp[i][jmax];
@@ -174,7 +174,7 @@ void boundaryvalues(
         }
 
     }
-    else if (NameQuestion==4){
+    else if (NameQuestion==4){//heat trap
         for (int i=1;i<=imax;i++){
             Temp[i][0]=Temp[i][1];
             Temp[i][jmax+1]=Temp[i][jmax];
@@ -185,7 +185,29 @@ void boundaryvalues(
         }
 
     }
-    else if (NameQuestion==5){
+    else if (NameQuestion==5){//rayleigh benard convection
+        for (int i=1;i<=imax;i++){
+            Temp[i][0]=2.0*Th-Temp[i][1];
+            Temp[i][jmax+1]=2.0*Tc-Temp[i][jmax];
+        }
+        for (int j=1;j<=jmax;j++){
+            Temp[0][j]=Temp[1][j];
+            Temp[imax+1][j]=Temp[imax][j];
+        }
+
+    }
+    else if (NameQuestion==7){//self defined problem with left th right tc
+        for (int i=1;i<=imax;i++){
+            Temp[i][0]=Temp[i][1];
+            Temp[i][jmax+1]=Temp[i][jmax];
+        }
+        for (int j=1;j<=jmax;j++){
+            Temp[0][j]=2.0*Th-Temp[1][j];
+            Temp[imax+1][j]=2.0*Tc-Temp[imax][j];
+        }
+
+    }
+    else if (NameQuestion==8){//self defined problem with down th upper tc
         for (int i=1;i<=imax;i++){
             Temp[i][0]=2.0*Th-Temp[i][1];
             Temp[i][jmax+1]=2.0*Tc-Temp[i][jmax];

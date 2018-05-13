@@ -133,14 +133,15 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
 
   //Set flags for the question: is this a fluid or heat problem? is it karman or step or natural convection or heat trap or rbc?
 
-  char* problem;
-  char* geometry;
-  char* Outputfilename;
+  char* problem;//address of the .dat file
+  char* geometry;//address of the .pgy file
+  char* Outputfilename;//where to save output
 
   double Th=1.0;
   double Tc=0.0;
   int TypeQuestion=0;//1=fluid, 2=heat
-  int NameQuestion=0;//1=karman, 2=step, 3=natural convection, 4=trap, 5=rbc
+  int NameQuestion=0;//1=karman, 2=step, 3=natural convection, 4=trap, 5=rbc, 
+                     //6=general fluid, 7=general heat with left hot right cold wall, 8=general heat with down hot up cold wall
   if (strcmp(args[1],"karman")==0){
     problem="karman.dat";
     geometry="karman.pgm";
@@ -182,6 +183,15 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
     Th=0.5;
     Tc=-0.5;
   }
+  else if (strcmp(args[1],"trapinverse")==0){
+    problem="trap.dat";
+    geometry="trap.pgm";
+    Outputfilename="output/trap";
+    NameQuestion=4;
+    TypeQuestion=2;
+    Th=-0.5;
+    Tc=0.5;
+  }
   else if (strcmp(args[1],"rbc")==0){
     problem="rbc.dat";
     geometry="rbc.pgm";
@@ -190,6 +200,27 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
     TypeQuestion=2;
     Th=294.78;
     Tc=291.20;
+  }
+  else{//self defined cases if not among the 5 questions. You need to use ./sim problem geometry Outputfilename (fluid/heat) (downup/leftright) [Th] [Tc]
+    problem=args[1];
+    geometry=args[2];
+    Outputfilename=args[3];
+    if (strcmp(args[4],"fluid")==0){
+      NameQuestion=6;
+      TypeQuestion=1;
+    }
+    else{
+      TypeQuestion=2;
+      Th=atof(args[6]);
+      Tc=atof(args[7]);
+      if (strcmp(args[5],"leftright")==0){//left Th rihgt Tc
+        NameQuestion=7;
+      }
+      else{//down Th up Tc
+        NameQuestion=8;
+      }
+    }
+
   }
 
   //read parameters from args[1].dat
