@@ -99,8 +99,7 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
   double *Pr=&valPr;
 
   //To generate filename. problem=args[1].dat, geometry=args[1].pgm, outputfilename=output/args[1]
-  //P.S. I find it really painful to generate file names with the input words using c because of the pointers...
-
+  
   /*char Filename1[(int)(sizeof(args[1])/sizeof(args[1][0]))];
   char Filename2[(int)(sizeof(args[1])/sizeof(args[1][0]))];
   char Filename3[(int)(sizeof(args[1])/sizeof(args[1][0]))];
@@ -170,7 +169,7 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
     geometry="natural2.pgm";
     Outputfilename="output/natural2";
     NameQuestion=3;
-    TypeQuestion=2;//heat
+    TypeQuestion=2;
     Th=1.0;
     Tc=0.0;
   }
@@ -183,10 +182,10 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
     Th=0.5;
     Tc=-0.5;
   }
-  else if (strcmp(args[1],"trapinverse")==0){
+  else if (strcmp(args[1],"trapinverse")==0){//trap questions but inverse the hot and cold wall
     problem="trap.dat";
     geometry="trap.pgm";
-    Outputfilename="output/trap";
+    Outputfilename="output/trapinverse";
     NameQuestion=4;
     TypeQuestion=2;
     Th=-0.5;
@@ -264,7 +263,7 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
 
   init_uvp(*UI,*VI,*PI,*imax,*jmax,U,V,P, TypeQuestion, *Ti, Temp);
 
-  //initialize flags together with its geometry structure (Geo, can be print out later)
+  //initialize flags together with its geometry structure (Geo, which can be print out later)
 
   init_flag(problem,geometry, *imax, *jmax, Flag, Geo);
 
@@ -345,9 +344,9 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
     restTime+=*dt; 
     *n=*n+1;
 
-    //write a vtk file after a dt_value
+    //write a vtk file after each dt_value
 
-    /*if (restTime>=*dt_value){
+    if (restTime>=*dt_value){
       boundaryvalues(*imax, *jmax, U, V, Flag, NameQuestion, Th, Tc, Temp, *INUI, *INVI);
       if (TypeQuestion==1){
         write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Geo);
@@ -356,7 +355,7 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
         write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Temp);
       }
       restTime=restTime-*dt_value;
-    }*/
+    }
 
     //print out n, dt, t, #sor, Residual in the terminal
 
