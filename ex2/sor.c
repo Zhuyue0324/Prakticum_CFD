@@ -17,6 +17,39 @@ void sor(
   double rloc;
   double coeff = omg/(2.0*(1.0/(dx*dx)+1.0/(dy*dy)));
 
+  
+  //Internal Obstacles
+  for(i = 1; i <= imax; i++) {
+    for(j = 1; j<=jmax; j++) {
+      if (Flag[i][j]<=255){
+        if (Flag[i][j]%16==10){//NW
+          P[i][j]=(P[i-1][j]+P[i][j+1])/2.0;
+        }
+        else if (Flag[i][j]%16==9){//NE
+          P[i][j]=(P[i+1][j]+P[i][j+1])/2.0;
+        }
+        else if (Flag[i][j]%16==6){//SW
+          P[i][j]=(P[i-1][j]+P[i][j-1])/2.0;
+        }
+        else if (Flag[i][j]%16==5){//SE
+          P[i][j]=(P[i+1][j]+P[i][j-1])/2.0;
+        }
+        else if (Flag[i][j]%16==8){//N
+          P[i][j]=P[i][j+1];
+        }
+        else if (Flag[i][j]%16==4){//S
+          P[i][j]=P[i][j-1];
+        }
+        else if (Flag[i][j]%16==2){//W
+          P[i][j]=P[i-1][j];
+        }
+        else if (Flag[i][j]%16==1){//E
+          P[i][j]=P[i+1][j];
+        }
+      }
+    }
+  }
+
   /* SOR iteration */
   for(i = 1; i <= imax; i++) {
     for(j = 1; j<=jmax; j++) {
@@ -52,37 +85,6 @@ void sor(
   for(j = 1; j <= jmax; j++) {
     P[0][j] = P[1][j];
     P[imax+1][j] = P[imax][j];
-  }
-  //Internal Obstacles
-  for(i = 1; i <= imax; i++) {
-    for(j = 1; j<=jmax; j++) {
-      if (Flag[i][j]<=255){
-        if (Flag[i][j]%16==10){//NW
-          P[i][j]=(P[i-1][j]+P[i][j+1])/2.0;
-        }
-        else if (Flag[i][j]%16==9){//NE
-          P[i][j]=(P[i+1][j]+P[i][j+1])/2.0;
-        }
-        else if (Flag[i][j]%16==6){//SW
-          P[i][j]=(P[i-1][j]+P[i][j-1])/2.0;
-        }
-        else if (Flag[i][j]%16==5){//SE
-          P[i][j]=(P[i+1][j]+P[i][j-1])/2.0;
-        }
-        else if (Flag[i][j]%16==8){//N
-          P[i][j]=P[i][j+1];
-        }
-        else if (Flag[i][j]%16==4){//S
-          P[i][j]=P[i][j-1];
-        }
-        else if (Flag[i][j]%16==2){//W
-          P[i][j]=P[i-1][j];
-        }
-        else if (Flag[i][j]%16==1){//E
-          P[i][j]=P[i+1][j];
-        }
-      }
-    }
   }
 
 
