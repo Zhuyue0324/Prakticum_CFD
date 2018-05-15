@@ -282,10 +282,10 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
 
   boundaryvalues(*imax, *jmax, U, V, Flag, NameQuestion, Th, Tc, Temp, *INUI, *INVI);
   if (TypeQuestion==1){
-    write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Geo);
+    write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, P, Geo, Temp);
   }
   else if (TypeQuestion==2){
-    write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Temp);
+    write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, P, Geo, Temp);
   }
 
   //main loop
@@ -308,7 +308,7 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
     //compute T^(n+1) if this is a heat question
 
     if (TypeQuestion==2){
-      calculate_temp(*Re, *Pr, *dt, *dx, *dy, *imax, *jmax, U, V, Temp, *alpha);
+      calculate_temp(*Re, *Pr, *dt, *dx, *dy, *imax, *jmax, U, V, Temp, *alpha, Flag, *Ti);
     }
 
     //compute F, G
@@ -346,16 +346,16 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
 
     //write a vtk file after each dt_value
 
-    if (restTime>=*dt_value){
+    /*if (restTime>=*dt_value){
       boundaryvalues(*imax, *jmax, U, V, Flag, NameQuestion, Th, Tc, Temp, *INUI, *INVI);
       if (TypeQuestion==1){
-        write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Geo);
+        write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, P, Geo, Temp);
       }
       else if (TypeQuestion==2){
-        write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Temp);
+        write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, P, Geo, Temp);
       }
       restTime=restTime-*dt_value;
-    }
+    }*/
 
     //print out n, dt, t, #sor, Residual in the terminal
 
@@ -375,10 +375,10 @@ int main(int argn, char** args){//.sim karman/step/natural1/natural2/trap/rbc
 
   boundaryvalues(*imax, *jmax, U, V, Flag, NameQuestion, Th, Tc, Temp, *INUI, *INVI);
   if (TypeQuestion==1){
-    write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Geo);
+    write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, P, Geo, Temp);
   }
   else if (TypeQuestion==2){
-    write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, Temp);
+    write_vtkFile(Outputfilename, *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, P, Geo, Temp);
   }
   
   //print how many iterations in sor in all 

@@ -243,12 +243,16 @@ void calculate_temp(
   double **U,
   double **V,
   double **Temp,
-  double alpha
+  double alpha,
+  int **Flag,
+  double Ti
 ){
     double **aux=matrix(1,imax,1,jmax);
+    init_matrix(aux,1,imax,1,jmax,0.0);
     for (int i=1;i<=imax;i++){
         for (int j=1;j<=jmax;j++){
-            aux[i][j]=Temp[i][j]+dt*(
+            if (Flag[i][j]>255){
+                aux[i][j]=Temp[i][j]+dt*(
                     ((Temp[i+1][j]-2.0*Temp[i][j]+Temp[i-1][j])/(dx*dx)+(Temp[i][j+1]-2.0*Temp[i][j]+Temp[i][j-1])/(dy*dy))/(Re*Pr)
                     -(U[i][j]*((Temp[i][j]+Temp[i+1][j])/2.0)-U[i-1][j]*((Temp[i-1][j]+Temp[i][j])/2.0)
                         +alpha*(fabs(U[i][j])*((Temp[i][j]-Temp[i+1][j])/2.0)-fabs(U[i-1][j])*((Temp[i-1][j]-Temp[i][j])/2.0))
@@ -256,8 +260,40 @@ void calculate_temp(
                     -(V[i][j]*((Temp[i][j]+Temp[i][j+1])/2.0)-V[i][j-1]*((Temp[i][j-1]+Temp[i][j])/2.0)
                         +alpha*(fabs(V[i][j])*((Temp[i][j]-Temp[i][j+1])/2.0)-fabs(V[i][j-1])*((Temp[i][j-1]-Temp[i][j])/2.0))
                     )/dy);
+            }
         }
     }
+    for (int i=1;i<=imax;i++){
+        for (int j=1;j<=jmax;j++){
+            if (Flag[i][j]<=255){
+                if (Flag[i][j]%16==10){//NW
+                    aux[i][j]=(aux[i-1][j]+aux[i][j+1])/2.0;
+                }
+                else if (Flag[i][j]%16==9){//NE
+                    aux[i][j]=(aux[i+1][j]+aux[i][j+1])/2.0;
+                }
+                else if (Flag[i][j]%16==6){//SW
+                    aux[i][j]=(aux[i-1][j]+aux[i][j-1])/2.0;
+                }
+                else if (Flag[i][j]%16==5){//SE
+                    aux[i][j]=(aux[i+1][j]+aux[i][j-1])/2.0;
+                }
+                else if (Flag[i][j]%16==8){//N
+                    aux[i][j]=aux[i][j+1];
+                }
+                else if (Flag[i][j]%16==4){//S
+                    aux[i][j]=aux[i][j-1];
+                }
+                else if (Flag[i][j]%16==2){//W
+                    aux[i][j]=aux[i-1][j];
+                }
+                else if (Flag[i][j]%16==1){//E
+                    aux[i][j]=aux[i+1][j];
+                }
+            }
+        }
+    }
+    
     for (int i=1;i<=imax;i++){
         for (int j=1;j<=jmax;j++){
             Temp[i][j]=aux[i][j];

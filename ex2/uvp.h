@@ -126,7 +126,9 @@ void calculate_temp(
   double **U,
   double **V,
   double **Temp,
-  double alpha
+  double alpha,
+  int **Flag,
+  double Ti
 );
 
 #endif
