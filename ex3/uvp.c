@@ -45,7 +45,7 @@ void calculate_fg(
 )
 {
     for (int j=jb;j<=jt;j++){
-        for (int i=il;i<ir;i++){
+        for (int i=(il-1);i<=ir;i++){
             F[i][j]=U[i][j]+dt*(
                 ((U[i+1][j]-2.0*U[i][j]+U[i-1][j])/(dx*dx)+(U[i][j+1]-2.0*U[i][j]+U[i][j-1])/(dy*dy))/Re
                 -(((U[i][j]+U[i+1][j])/2.0)*((U[i][j]+U[i+1][j])/2.0)-((U[i-1][j]+U[i][j])/2.0)*((U[i-1][j]+U[i][j])/2.0)
@@ -58,7 +58,7 @@ void calculate_fg(
             );
         }
     }
-    for (int j=jb;j<jt;j++){
+    for (int j=(jb-1);j<=jt;j++){
         for (int i=il;i<=ir;i++){
             G[i][j]=V[i][j]+dt*(
                 ((V[i+1][j]-2.0*V[i][j]+V[i-1][j])/(dx*dx)+(V[i][j+1]-2.0*V[i][j]+V[i][j-1])/(dy*dy))/Re
@@ -197,11 +197,11 @@ void calculate_uv(
 )
 {
     for (int j=jb;j<=jt;j++){
-        for (int i=il;i<ir;i++){
+        for (int i=(il-1);i<=ir;i++){
             U[i][j]=F[i][j]-dt*(P[i+1][j]-P[i][j])/dx;
         }
     }
-    for (int j=jb;j<jt;j++){
+    for (int j=(jb-1);j<=jt;j++){
         for (int i=il;i<=ir;i++){
             V[i][j]=G[i][j]-dt*(P[i][j+1]-P[i][j])/dy;
         }

@@ -101,13 +101,13 @@ void pressure_comm(double **P,
         }
     }
     if (MPI_PROC_NULL==rank_r){
-        MPI_Send(bufSend, chunk, MPI_FLOAT, rank_l, 1, MPI_COMM_WORLD);
+        MPI_Send(bufSend, chunk, MPI_DOUBLE, rank_l, 1, MPI_COMM_WORLD);
     }
     else if(MPI_PROC_NULL!=rank_l){
-        MPI_Sendrecv(bufSend,chunk, MPI_FLOAT, rank_l, 1, bufRecv, chunk, MPI_FLOAT, rank_r, 1, MPI_COMM_WORLD, status);
+        MPI_Sendrecv(bufSend,chunk, MPI_DOUBLE, rank_l, 1, bufRecv, chunk, MPI_DOUBLE, rank_r, 1, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL==rank_l){
-        MPI_Recv(bufRecv, chunk, MPI_FLOAT, rank_r, 1, MPI_COMM_WORLD, status);
+        MPI_Recv(bufRecv, chunk, MPI_DOUBLE, rank_r, 1, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL!=rank_r){
         for (int j=jb;j<=jt;j++){
@@ -123,13 +123,13 @@ void pressure_comm(double **P,
         }
     }
     if (MPI_PROC_NULL==rank_l){
-        MPI_Send(bufSend, chunk, MPI_FLOAT, rank_r, 2, MPI_COMM_WORLD);
+        MPI_Send(bufSend, chunk, MPI_DOUBLE, rank_r, 2, MPI_COMM_WORLD);
     }
     else if(MPI_PROC_NULL!=rank_r){
-        MPI_Sendrecv(bufSend,chunk, MPI_FLOAT, rank_r, 2, bufRecv, chunk, MPI_FLOAT, rank_l, 2, MPI_COMM_WORLD, status);
+        MPI_Sendrecv(bufSend,chunk, MPI_DOUBLE, rank_r, 2, bufRecv, chunk, MPI_DOUBLE, rank_l, 2, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL==rank_r){
-        MPI_Recv(bufRecv, chunk, MPI_FLOAT, rank_l, 2, MPI_COMM_WORLD, status);
+        MPI_Recv(bufRecv, chunk, MPI_DOUBLE, rank_l, 2, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL!=rank_l){
         for (int j=jb;j<=jt;j++){
@@ -145,13 +145,13 @@ void pressure_comm(double **P,
         }
     }
     if (MPI_PROC_NULL==rank_b){
-        MPI_Send(bufSend, chunk, MPI_FLOAT, rank_t, 3, MPI_COMM_WORLD);
+        MPI_Send(bufSend, chunk, MPI_DOUBLE, rank_t, 3, MPI_COMM_WORLD);
     }
     else if(MPI_PROC_NULL!=rank_t){
-        MPI_Sendrecv(bufSend,chunk, MPI_FLOAT, rank_t, 3, bufRecv, chunk, MPI_FLOAT, rank_b, 3, MPI_COMM_WORLD, status);
+        MPI_Sendrecv(bufSend,chunk, MPI_DOUBLE, rank_t, 3, bufRecv, chunk, MPI_DOUBLE, rank_b, 3, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL==rank_t){
-        MPI_Recv(bufRecv, chunk, MPI_FLOAT, rank_b, 3, MPI_COMM_WORLD, status);
+        MPI_Recv(bufRecv, chunk, MPI_DOUBLE, rank_b, 3, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL!=rank_b){
         for (int i=il;i<=ir;i++){
@@ -167,13 +167,13 @@ void pressure_comm(double **P,
         }
     }
     if (MPI_PROC_NULL==rank_t){
-        MPI_Send(bufSend, chunk, MPI_FLOAT, rank_b, 4, MPI_COMM_WORLD);
+        MPI_Send(bufSend, chunk, MPI_DOUBLE, rank_b, 4, MPI_COMM_WORLD);
     }
     else if(MPI_PROC_NULL!=rank_b){
-        MPI_Sendrecv(bufSend,chunk, MPI_FLOAT, rank_b, 4, bufRecv, chunk, MPI_FLOAT, rank_t, 4, MPI_COMM_WORLD, status);
+        MPI_Sendrecv(bufSend,chunk, MPI_DOUBLE, rank_b, 4, bufRecv, chunk, MPI_DOUBLE, rank_t, 4, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL==rank_b){
-        MPI_Recv(bufRecv, chunk, MPI_FLOAT, rank_t, 4, MPI_COMM_WORLD, status);
+        MPI_Recv(bufRecv, chunk, MPI_DOUBLE, rank_t, 4, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL!=rank_t){
         for (int i=il;i<=ir;i++){
@@ -209,13 +209,13 @@ void uv_comm (double**U,
         bufSend[2*(jt-jb+1)]=V[il][jt];
     }
     if (MPI_PROC_NULL==rank_r){
-        MPI_Send(bufSend, chunk, MPI_FLOAT, rank_l, 1, MPI_COMM_WORLD);
+        MPI_Send(bufSend, chunk, MPI_DOUBLE, rank_l, 1, MPI_COMM_WORLD);
     }
     else if(MPI_PROC_NULL!=rank_l){
-        MPI_Sendrecv(bufSend,chunk, MPI_FLOAT, rank_l, 1, bufRecv, chunk, MPI_FLOAT, rank_r, 1, MPI_COMM_WORLD, status);
+        MPI_Sendrecv(bufSend,chunk, MPI_DOUBLE, rank_l, 1, bufRecv, chunk, MPI_DOUBLE, rank_r, 1, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL==rank_l){
-        MPI_Recv(bufRecv, chunk, MPI_FLOAT, rank_r, 1, MPI_COMM_WORLD, status);
+        MPI_Recv(bufRecv, chunk, MPI_DOUBLE, rank_r, 1, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL!=rank_r){
         for (int j=jb;j<=jt;j++){
@@ -235,13 +235,13 @@ void uv_comm (double**U,
         bufSend[2*(jt-jb+1)]=V[ir][jt];
     }
     if (MPI_PROC_NULL==rank_l){
-        MPI_Send(bufSend, chunk, MPI_FLOAT, rank_r, 2, MPI_COMM_WORLD);
+        MPI_Send(bufSend, chunk, MPI_DOUBLE, rank_r, 2, MPI_COMM_WORLD);
     }
     else if(MPI_PROC_NULL!=rank_r){
-        MPI_Sendrecv(bufSend,chunk, MPI_FLOAT, rank_r, 2, bufRecv, chunk, MPI_FLOAT, rank_l, 2, MPI_COMM_WORLD, status);
+        MPI_Sendrecv(bufSend,chunk, MPI_DOUBLE, rank_r, 2, bufRecv, chunk, MPI_DOUBLE, rank_l, 2, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL==rank_r){
-        MPI_Recv(bufRecv, chunk, MPI_FLOAT, rank_l, 2, MPI_COMM_WORLD, status);
+        MPI_Recv(bufRecv, chunk, MPI_DOUBLE, rank_l, 2, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL!=rank_l){
         for (int j=jb;j<=jt;j++){
@@ -261,13 +261,13 @@ void uv_comm (double**U,
         bufSend[2*(ir-il+1)]=U[ir][jt];
     }
     if (MPI_PROC_NULL==rank_b){
-        MPI_Send(bufSend, chunk, MPI_FLOAT, rank_t, 3, MPI_COMM_WORLD);
+        MPI_Send(bufSend, chunk, MPI_DOUBLE, rank_t, 3, MPI_COMM_WORLD);
     }
     else if(MPI_PROC_NULL!=rank_t){
-        MPI_Sendrecv(bufSend,chunk, MPI_FLOAT, rank_t, 3, bufRecv, chunk, MPI_FLOAT, rank_b, 3, MPI_COMM_WORLD, status);
+        MPI_Sendrecv(bufSend,chunk, MPI_DOUBLE, rank_t, 3, bufRecv, chunk, MPI_DOUBLE, rank_b, 3, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL==rank_t){
-        MPI_Recv(bufRecv, chunk, MPI_FLOAT, rank_b, 3, MPI_COMM_WORLD, status);
+        MPI_Recv(bufRecv, chunk, MPI_DOUBLE, rank_b, 3, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL!=rank_b){
         for (int i=il;i<=ir;i++){
@@ -287,13 +287,13 @@ void uv_comm (double**U,
         bufSend[2*(ir-il+1)]=U[ir][jb];
     }
     if (MPI_PROC_NULL==rank_t){
-        MPI_Send(bufSend, chunk, MPI_FLOAT, rank_b, 4, MPI_COMM_WORLD);
+        MPI_Send(bufSend, chunk, MPI_DOUBLE, rank_b, 4, MPI_COMM_WORLD);
     }
     else if(MPI_PROC_NULL!=rank_b){
-        MPI_Sendrecv(bufSend,chunk, MPI_FLOAT, rank_b, 4, bufRecv, chunk, MPI_FLOAT, rank_t, 4, MPI_COMM_WORLD, status);
+        MPI_Sendrecv(bufSend,chunk, MPI_DOUBLE, rank_b, 4, bufRecv, chunk, MPI_DOUBLE, rank_t, 4, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL==rank_b){
-        MPI_Recv(bufRecv, chunk, MPI_FLOAT, rank_t, 4, MPI_COMM_WORLD, status);
+        MPI_Recv(bufRecv, chunk, MPI_DOUBLE, rank_t, 4, MPI_COMM_WORLD, status);
     }
     if (MPI_PROC_NULL!=rank_t){
         for (int i=il;i<=ir;i++){

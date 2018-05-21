@@ -165,11 +165,11 @@ int main(int argn, char** args){
   double bufRecv[chunk];
 
   //to test function MPI_Allreduce
-  double a=myrank*0.1;
+  /*double a=myrank*0.1;
   printf("a %i, %f\n", myrank, a);
   double b;
-  MPI_Allreduce(&a, &b, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-  printf("b %i, %f\n", myrank, b);
+  MPI_Allreduce(&a, &b, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+  printf("b %i, %f\n", myrank, b);*/
 
 
   //int solbeh=0;
@@ -188,18 +188,11 @@ int main(int argn, char** args){
       calculate_local_uv_max(U,V, umaxlocal, vmaxlocal, *il, *ir, *jb, *jt);
       MPI_Barrier(MPI_COMM_WORLD); 
       //computes the global maximum values of u (n+1) and v (n+1) and broadcasts them to all other processes
-      MPI_Allreduce(umaxlocal, umax, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
-      MPI_Allreduce(vmaxlocal, vmax, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
-      if(myrank==0){
-        printf("umax= %f, ",*umax);
-        printf("vmax= %f, ",*vmax);
-      }
+      MPI_Allreduce(umaxlocal, umax, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+      MPI_Allreduce(vmaxlocal, vmax, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
       MPI_Barrier(MPI_COMM_WORLD);
       //Compute the common dt according to Worksheet 1
       calculate_dt(*Re, *tau, dt, *dx, *dy, umax, vmax);
-    }
-    if (myrank==0){
-      printf("dt= %f\n",*dt);
     }
 
     //Set boundary values for u und v
@@ -208,17 +201,11 @@ int main(int argn, char** args){
     //Compute F (n) and G (n) according to Worksheet 1
     calculate_fg(*Re, *GX, *GY, *alpha, *dt, *dx, *dy, *imax, *jmax, U, V, F, G, *il, *ir, *jb, *jt);
     MPI_Barrier(MPI_COMM_WORLD);
-    uv_comm(F,G,*il,*ir,*jb,*jt,*rank_l,*rank_r,*rank_b,*rank_t,bufSend,bufRecv,&status,chunk);
-    MPI_Barrier(MPI_COMM_WORLD);
+    //uv_comm(F,G,*il,*ir,*jb,*jt,*rank_l,*rank_r,*rank_b,*rank_t,bufSend,bufRecv,&status,chunk);
+    //MPI_Barrier(MPI_COMM_WORLD);
 
     //Compute the right-hand side of the pressure equation (Worksheet 1)
     calculate_rs(*dt, *dx, *dy, F, G, RS, *il, *ir, *jb, *jt);
-
-    if (myrank==0){
-      printf("F= %f, ",F[2][2]);
-      printf("G= %f, ",G[2][2]);
-      printf("RS= %f\n",RS[2][2]);
-    }
 
     *it=0;
     *res=*eps+1;
@@ -238,7 +225,7 @@ int main(int argn, char** args){
       //Compute the partial residual sum and send it to the master process
       //The master process computes the residual norm of the pressure equation and broadcasts it to all the other processes
       MPI_Barrier(MPI_COMM_WORLD);
-      MPI_Allreduce(reslocal, res, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+      MPI_Allreduce(reslocal, res, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       MPI_Barrier(MPI_COMM_WORLD);
       //solbeh=solbeh+1;
     }
@@ -252,16 +239,7 @@ int main(int argn, char** args){
     //Exchange the velocity values in the boundary strips
     MPI_Barrier(MPI_COMM_WORLD);
     uv_comm(U,V,*il,*ir,*jb,*jt,*rank_l,*rank_r,*rank_b,*rank_t,bufSend,bufRecv,&status,chunk);
-
-    if(myrank==0){
-      printf("P= %f, ", P[2][2]);
-      printf("res= %f, ", sqrt(*res));
-      printf("   U=");
-      printf("%f",U[2][2]);
-      printf(", V=");
-      printf("%f\n",V[2][2]);
-      printf("-------------------------------------------------------------\n");
-    }
+    boundaryvalues(*imax, *jmax, U, V, *il, *ir, *jb, *jt);
     
     *t+=*dt;
     restTime+=*dt; 
@@ -270,7 +248,7 @@ int main(int argn, char** args){
       write_vtkFile("output/output", *n, *xlength, *ylength, *imax, *jmax, *dx, *dy, U, V, P);
       restTime=restTime-*dt_value;
     }*/
-    /*if(myrank==0){
+    if(myrank==0){
       printf("n=");
       printf("%i",*n);
       printf(", dt=");
@@ -281,14 +259,14 @@ int main(int argn, char** args){
       printf("%i",*it);
       printf(", Res=");
       printf("%f\n",sqrt(*res));
-      printf("   U=");
+      /*printf("   U=");
       printf("%f",U[2][2]);
       printf(", V=");
       printf("%f",V[2][2]);
       printf(", P=");
-      printf("%f\n",P[2][2]);
+      printf("%f\n",P[2][2]);*/
       
-    }*/
+    }
     
   }
   //printf("Total #SOR=");
