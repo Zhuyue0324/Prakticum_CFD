@@ -1,0 +1,292 @@
+---
+title: "Readme for Excercise 3 of CFD Master Praktikum (Group G)"
+author: "Yue Zhu, Yingqiang Gao and Nikhil Agarwal"
+date: "June 4, 2018"
+output: 
+  pdf_document: 
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+  html_document: 
+    fig_caption: yes
+    number_sections: yes
+    toc: yes
+---
+# Instructions about compilation, execution, and report generation
+
+## Compilation and Execution
+
+Please start a terminal and switch to where the `main.c` is. Build it first by typing `make` in the terminal. Then if everything is right, find the executable `sim` being created and run with the following command:
+
+- `mpiexec -n <N> ./sim` for `MPICH` where `N` is the product of the number of MPI processes along x and y axis.
+- `mpirun --hostfile my-hosts -np <N> ./sim` for `Open-MPI` where `N` is the product of the number of MPI processes along x and y axis.
+
+*Example: To execute the binary with 2 process along x direction and 3 along y with MPICH, set these values in `cavity100.dat` and run as follows*
+
+`mpiexec -n 6 ./sim`
+
+## Report Generation
+
+The markdown file (and generated html) loads image if the screenshot generated from the `Paraview` are stored at `.\..\output` location relative to README.rmd.
+
+Use a markdown file viewer to view the report or it can be converted to html or pdf using suitable tools. `Github` automatically generates the view from markdown.
+
+# Problem:
+
+## Parameters
+
+|            |            |              |                |
+| ---------- | :--------: | :----------: | -------------: |
+| imax = 300 | jmax = 300 | xlength = 10 | ylength = 10   |
+| dt = 0.01  | t_end = 1  | tau = 0.5    | dt_value = 2.0 |
+| eps = 0.01 | omg = 1.7  | alpha = 0.5  | itermax = 100  |
+| GX = 0.0   | GY = 0.0   | Re = 10      |                |
+| UI = 0.0   | VI = 0.0   | PI = 0.0     |                |
+| iproc = 2  | jproc = 3  |              |                |
+
+## Geometry
+
+Driven cavity of square cross-section area. The domain is a container filled with a fluid with the container
+lid (a band or a ribbon) moving at a constant velocity. No-slip conditions are imposed on all four boundaries, with the exception of the upper boundary, along which the velocity u in x-direction is not set to zero, but is equal to 1, in order to simulate the moving lid.
+
+---
+
+## Pressure
+
+\begin{figure}[h!]
+\includegraphics[width=0.75\textwidth]{./../output/output_i2j3_ex3parameters_pressure.png}
+\caption{Pressure}
+\end{figure}
+
+**Observation**: The pressure is highest at the top right while lowest at top left, is consistent with the direction of fluid flow in the absence of thermal effects.
+
+--- 
+
+## Streamlines
+
+\begin{figure}[h!]
+\includegraphics[width=0.75\textwidth]{./../output/output_i2j3_ex3parameters_stream.png}
+\caption{Streamlines}
+\end{figure}
+
+**Observation:** The streamlines are ploted for each subdomain independently. The path traced out by a massless particle as it moves with the flow, is matching at the interface of each subdomain. So, we can conclude that the streamlines are consistent with other subdomains.
+
+\newpage
+\pagebreak
+
+## Velocity
+
+\begin{figure}[h!]
+\includegraphics[width=0.75\textwidth]{./../output/output_i2j3_ex3parameters_velocity.png}
+\caption{Velocity}
+\end{figure}
+
+
+**Observation:** As expected velocity is maximum at the top. Due to low Reynold's number there is less turbulence in the system (**when  compared with Worksheet1**).
+
+---
+
+## Performance
+
+- Speedup, `S(p) := T(1)/T(p)`
+- Parallel efficiency `E(p) := T(1)=(p * T(p)) = S(p)/p`
+
+On Intel Processor i7-8550U (*henceforth refered to as **new machine***) with
+
+- Nominal Frequency = 1.80GHz
+- Single Core Frequency = 4.0 GHz
+- \# Core = 4
+- \# Threads/core = 2
+- L3 Cache = 8 MB
+- Memory Types = DDR4-2400, LPDDR3-2133
+- Bus Speed 4 GT/s OPI
+
+| # Process (x) | # Process (y) | Total Process | time1 (s) | time2 (s) | time3 (s) | mean (s) | Std. Dev | Speedup | Efficiency |
+| ------------- | ------------- | ------------- | --------- | --------- | --------- | -------- | -------- | ------- | ---------- |
+| 1             | 1             | 1             | 164.37    | 165.75    | 165.27    | 165.00   | 0.70     | 1.00    | 1.00       |
+| 2             | 1             | 2             | 88.52     | 88.86     | 91.43     | 90.00    | 1.59     | 1.83    | 0.92       |
+| 1             | 3             | 3             | 35.19     | 36.28     | 36.16     | 36.00    | 0.59     | 4.58    | 1.53       |
+| 1             | 4             | 4             | 31.51     | 30.12     | 26.85     | 30.00    | 2.39     | 5.50    | 1.38       |
+| 1             | 6             | 6             | 35.37     | 36.66     | 35.91     | 36.00    | 0.65     | 4.58    | 0.76       |
+| 2             | 3             | 6             | 39.48     | 39.18     | 40.58     | 40.00    | 0.74     | 4.13    | 0.69       |
+| 2             | 4             | 8             | 35.51     | 45.52     | 39.96     | 40.00    | 5.02     | 4.13    | 0.52       |
+| 2             | 2             | 4             | 53.78     | 52.98     | 55.17     | 54.00    | 1.11     | 3.06    | 0.76       |
+| 3             | 4             | 12            | very slow |           |           |          |          |         |            |
+| 4             | 5             | 20            | very slow |           |           |          |          |         |            |
+| 6             | 6             | 36            | very slow |           |           |          |          |         |            |
+
+---
+
+On Intel Processor i7-4720HQ (_henceforth refered to as **old machine**_) with
+
+- Nominal Frequency = 2.60GHz 
+- Single Core Frequency = 3.6GHz
+- \# Core = 4
+- \# Threads/core = 2
+- L3 Cache = 6 MB
+- Memory Types = DDR3L 1333/1600
+- Bus Speed 5 GT/s DMI2
+
+
+| # Process (x) | # Process (y) | Total Process | time1 (s) | time2 (s) | time3 (s) | mean (s) | Std. Dev | Speedup | Efficiency |
+| ------------- | ------------- | ------------- | --------- | --------- | --------- | -------- | -------- | ------- | ---------- |
+| 1             | 1             | 1             | 115.13    | 112.08    | 114.09    | 113.77   | 1.55     | 1.00    | 1.00       |
+| 2             | 1             | 2             | 60.56     | 58.85     | 61.00     | 60.13    | 1.14     | 1.89    | 0.95       |
+| 1             | 3             | 3             | 42.97     | 43.86     | 44.00     | 43.61    | 0.56     | 2.61    | 0.87       |
+| 1             | 4             | 4             | 36.93     | 33.60     | 36.60     | 35.71    | 1.83     | 3.19    | 0.80       |
+| 1             | 5             | 5             | 39.74     | 42.55     | 44.18     | 42.16    | 2.24     | 2.70    | 0.54       |
+| 1             | 6             | 6             | 40.89     | 42.86     | 45.99     | 43.25    | 2.57     | 2.63    | 0.44       |
+| 2             | 4             | 8             | 45.42     | 50.26     | 52.96     | 49.55    | 3.82     | 2.30    | 0.29       |
+| 2             | 2             | 4             | 36.34     | 34.51     | 36.50     | 35.78    | 1.11     | 3.18    | 0.79       |
+
+---
+
+\newpage
+\pagebreak
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r speedup, echo=FALSE}
+# Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Define 2 vectors
+Speedup4  <- c(1.00,	1.89,	2.61,	3.19,	2.70,	2.63,	2.30)
+Speedup8 <- c(1.00,	1.83,	4.58,	5.50,	4.58,	4.13,	4.13)
+
+# Calculate range from 0 to max value of cars and trucks
+g_range <- range(0, Speedup4, Speedup8)
+
+# Graph using y axis that ranges from 0 to max 
+# value in both y axis vector.  Turn off axes and 
+# annotations (axis labels) so we can specify them ourself
+plot(Speedup4, type="o", col="blue", ylim=g_range, axes=FALSE, ann=FALSE)
+
+# Graph another y vector with red dashed line and square points
+lines(Speedup8, type="o", col="red", ylim=g_range)
+
+# Make x axis using labels
+axis(1, at=1:7, lab=c(1,2,3,4,5,6,8))
+
+# Make y axis with horizontal labels that display ticks at 
+# every 4 marks. 4*0:g_range[2] is equivalent to c(0,4,8,12).
+axis(2, las=1, at=1*0:g_range[2])
+# axis(2, las=1, at=1*0:g_range[2])
+
+# Create box around plot
+box()
+
+# Gridlines (https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/grid.html)
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted", lwd = par("lwd"), equilogs = TRUE)
+
+# Create a title with a red, bold/italic font
+title(main="Speedup Comparison : Old Machine Vs New machine", col.main="Black", font.main=4)
+
+# Label the x and y axes with dark green text
+title(xlab="No. of Process", col.lab=rgb(0,0.5,0))
+title(ylab="Speedup", col.lab=rgb(0,0.5,0))
+
+# Create a legend at (1, g_range[2]) that is slightly smaller 
+# (cex) and uses the same line colors and points used by 
+# the actual plots 
+legend(2, 1, c("Speedup with Old Machine","Speedup with New machine"), cex=0.8, 
+       col=c("blue","red"), pch=21:22, lty=1:1)
+```
+
+---
+
+```{r Efficiency, echo=FALSE}
+
+# Define 2 vectors
+Efficiency4  <- c(1, 0.95,	0.87,	0.8,	0.54,	0.44,	0.290)
+Efficiency8 <- c(1.00,	0.92,	1.53,	1.38,	0.76,	0.69,	0.52)
+
+# Calculate range from 0 to max value of cars and trucks
+g_range <- range(0, Efficiency4, Efficiency8)
+
+# Graph using y axis that ranges from 0 to max 
+# value in both y axis vector.  Turn off axes and 
+# annotations (axis labels) so we can specify them ourself
+plot(Efficiency4, type="o", col="blue", ylim=g_range, axes=FALSE, ann=FALSE)
+
+# Graph another y vector with red dashed line and square points
+lines(Efficiency8, type="o", col="red", ylim=g_range)
+
+# Make x axis using labels
+axis(1, at=1:7, lab=c(1,2,3,4,5,6,8))
+
+# Make y axis with horizontal labels that display ticks at 
+# every 4 marks. 4*0:g_range[2] is equivalent to c(0,4,8,12).
+axis(2, las=1, at=0.2*0:5*g_range[2])
+# axis(2, las=1, at=1*0:g_range[2])
+
+# Create box around plot
+box()
+
+# Gridlines (https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/grid.html)
+grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted", lwd = par("lwd"), equilogs = TRUE)
+
+# Create a title with a red, bold/italic font
+title(main="Efficiency Comparison : Old Machine Vs New machine", col.main="Black", font.main=4)
+
+# Label the x and y axes with dark green text
+title(xlab="No. of Process", col.lab=rgb(0,0.5,0))
+title(ylab="Efficiency", col.lab=rgb(0,0.5,0))
+
+# Create a legend at (1, g_range[2]) that is slightly smaller 
+# (cex) and uses the same line colors and points used by 
+# the actual plots 
+legend(2, 0.3, c("Efficiency with Old Machine","Efficiency with New machine"), cex=0.8, 
+       col=c("blue","red"), pch=21:22, lty=1:1)
+```
+
+---
+
+
+| **Observation**                                                                                                                                  | **Explanation**                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Single Core performance of *Old machine* with lesser frequency, lesser cache, slow RAM but faster Bus is better than that of the *Newer machine* | There should me further CPU characteristics (beyond CPU, Cache, RAM, Bus) that should have caused this result                       |
+|                                                                                                                                                  |                                                                                                                                     |
+| When the total of Process becomes more the performance takes a severe hit!                                                                       | As the resources are limited, *oversubscription of process* leads to *severe performance penalty*.                                  |
+|                                                                                                                                                  |                                                                                                                                     |
+| Max. Speed up is achieved when iproc = 1 and jproc = 4                                                                                           | Communication overhead and resource contention affects speedup for higher number of MPI process.                                    |
+|                                                                                                                                                  |                                                                                                                                     |
+| Superlinearity in efficiency seen with the execution with the *newer machine*                                                                    | Probably due to more cache available in the machine (*Reference*: How to measure, present, and compare parallel performance - IEEE) |
+|                                                                                                                                                  |                                                                                                                                     |
+---
+
+# Addendum
+
+## Domain decomposition Visualized
+
+See Figure *Domain Decomposition Visualized*
+
+\begin{figure}[!h]
+\includegraphics[width=0.75\textwidth]{./../output/output_i2j3_ex3parameters_proof_using_MPI.png}
+\caption{Domain Decomposition Visualized}
+\end{figure}
+
+---
+
+## Same Problem Visualized for Iproc = 2 and Jproc = 2
+
+See Figure *Same Problem Visualized for Iproc = 2 and Jproc = 2*
+
+\begin{figure}[!h]
+\includegraphics[width=0.75\textwidth]{./../output/output_i2j2_ex3parameters_velocity.png}
+\caption{Same Problem Visualized for Iproc = 2 and Jproc = 2}
+\end{figure}
+
+---
+
+## Same Geometry but Parameters from Worksheet 1 Visualized for Iproc = 2 and Jproc = 2
+
+See Figure *Same Geometry but Parameters from Worksheet 1 Visualized*
+
+\begin{figure}[!h]
+\includegraphics[width=0.75\textwidth]{./../output/output_i2j2_ex1parameters_velocity.png}
+\caption{Same Geometry but Parameters from Worksheet 1 Visualized}
+\end{figure}
+
+---
